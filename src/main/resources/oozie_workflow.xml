@@ -1,0 +1,86 @@
+<workflow-app xmlns="uri:oozie:workflow:0.5" name="HBASE_FETCH_JOB">
+	<start to="HBASE_FETCH_JOB" />
+	<action name="HBASE_FETCH_JOB">
+		<java>
+			<job-tracker>${jobTracker}</job-tracker>
+			<name-node>${nameNode}</name-node>
+			<configuration>
+				<property>
+					<name>oozie.launcher.mapred.job.queue.name</name>
+					<value>default</value>
+				</property>
+				<property>
+					<name>mapreduce.job.queuename</name>
+					<value>default</value>
+				</property>
+				<property>
+					<name>oozie.launcher.mapred.map.child.java.opts</name>
+					<value>-Xmx15g</value>
+				</property>
+				<property>
+					<name>oozie.launcher.mapred.job.map.memory.mb</name>
+					<value>20480</value>
+				</property>
+				<property>
+					<name>oozie.launcher.mapreduce.map.java.opts</name>
+					<value>-Xmx6554M</value>
+				</property>
+
+				<property>
+					<name>mapreduce.map.cpu.vcores</name>
+					<value>4</value>
+				</property>
+
+				<property>
+					<name>mapreduce.map.output.compress</name>
+					<value>true</value>
+				</property>
+
+				<property>
+					<name>mapreduce.map.output.compress.codec</name>
+					<value>org.apache.hadoop.io.compress.SnappyCodec</value>
+				</property>
+
+				<property>
+					<name>mapreduce.map.memory.mb</name>
+					<value>8192</value>
+				</property>
+
+				<property>
+					<name>mapreduce.map.java.opts</name>
+					<value>-Xmx6554M</value>
+				</property>
+				<property>
+					<name>hbase.zookeeper.property.maxClientCnxns</name>
+					<value>0</value>
+				</property>
+				<property>
+					<name>zookeeper.session.timeout</name>
+					<value>1200000</value>
+				</property>	
+				<property>
+					<name>hbase.zookeeper.property.tickTime</name>
+					<value>6000</value>
+				</property>
+			</configuration>	
+			<main-class>com.nielsen.buy.integration.oozie.plink.service.NesPlinkDmleMonitorService</main-class>		
+			<java-opts>-Xms6554M -Xmx6554M</java-opts>				
+			<arg>${hbaseQuorum}</arg>
+			<arg>${hbaseSite}</arg>	
+			<arg>${coreSite}</arg>
+			<arg>${nameNode}</arg>	
+			<arg>${user}</arg>					
+			<arg>${timeRangeInSecs}</arg>
+			<arg>${numOfRecords}</arg>			
+			<arg>${inputPath}</arg>	
+		</java>
+		<ok to="end" />
+		<error to="fail" />
+	</action>
+	<kill name="fail">
+		<message>HBASE FETCH JOB failed, error
+			message[${wf:errorMessage(wf:lastErrorNode())}]
+		</message>
+	</kill>
+	<end name="end" />
+</workflow-app>
