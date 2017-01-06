@@ -1,0 +1,11 @@
+<coordinator-app
+	xmlns="uri:oozie:coordinator:0.1" name="HBASE_FETCH_JOB_COORDINATOR" frequency="${frequency}" start="${startTime}" end="${endTime}" timezone="${timezone}">
+	<controls>
+		<concurrency>1</concurrency>
+	</controls>
+	<action>
+		<workflow>
+			<app-path>${workflowPath}</app-path>
+		</workflow>
+	</action>
+</coordinator-app>
